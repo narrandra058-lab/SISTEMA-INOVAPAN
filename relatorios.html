@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Relatórios | InovaPan</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<link rel="stylesheet" href="css/estilo.css">
+
+</head>
+
+<body>
+
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="logo-icon">
+<i class="bi bi-cup-hot-fill"></i>
+</div>
+
+<div class="logo-text">
+
+<strong>InovaPan</strong>
+
+<span>Gestão de Panificadora</span>
+
+</div>
+
+</div>
+
+
+<div class="menu-titulo">
+Menu
+</div>
+
+
+<ul class="menu">
+
+<li>
+<a href="dashboard.html">
+<i class="bi bi-grid"></i>
+<span>Dashboard</span>
+</a>
+</li>
+
+<li>
+<a href="clientes.html">
+<i class="bi bi-people"></i>
+<span>Clientes</span>
+</a>
+</li>
+
+<li>
+<a href="produtos.html">
+<i class="bi bi-basket"></i>
+<span>Produtos</span>
+</a>
+</li>
+
+<li>
+<a href="pedidos.html">
+<i class="bi bi-receipt"></i>
+<span>Pedidos</span>
+</a>
+</li>
+
+<li>
+<a href="relatorios.html" class="active">
+<i class="bi bi-bar-chart"></i>
+<span>Relatórios</span>
+</a>
+</li>
+
+</ul>
+
+
+<div class="menu-sair">
+
+<a href="#" onclick="sairSistema()">
+
+<i class="bi bi-box-arrow-left"></i>
+
+<span>Sair</span>
+
+</a>
+
+</div>
+
+</aside>
+
+
+<main class="main">
+
+
+<header class="topbar">
+
+<div class="topbar-titulo">
+Relatórios
+</div>
+
+<div class="usuario">
+
+<div class="usuario-avatar">
+<i class="bi bi-person"></i>
+</div>
+
+<div class="usuario-info">
+
+<strong>Usuário</strong>
+
+<span>Administrador</span>
+
+</div>
+
+</div>
+
+</header>
+
+
+<section class="conteudo">
+
+
+<div class="titulo-pagina">
+
+<div>
+
+<h1>Relatórios</h1>
+
+<p>
+Acompanhe os principais indicadores da panificadora.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="metricas">
+
+
+<div class="metrica">
+
+<div class="metrica-topo">
+
+<span class="metrica-label">
+Vendas
+</span>
+
+<div class="metrica-icone">
+<i class="bi bi-cash-stack"></i>
+</div>
+
+</div>
+
+<h3 id="relatorioVendas">
+R$ 0,00
+</h3>
+
+<small>
+Total registrado
+</small>
+
+</div>
+
+
+<div class="metrica">
+
+<div class="metrica-topo">
+
+<span class="metrica-label">
+Pedidos
+</span>
+
+<div class="metrica-icone">
+<i class="bi bi-receipt"></i>
+</div>
+
+</div>
+
+<h3 id="relatorioPedidos">
+0
+</h3>
+
+<small>
+Pedidos realizados
+</small>
+
+</div>
+
+
+<div class="metrica">
+
+<div class="metrica-topo">
+
+<span class="metrica-label">
+Clientes
+</span>
+
+<div class="metrica-icone">
+<i class="bi bi-people"></i>
+</div>
+
+</div>
+
+<h3 id="relatorioClientes">
+0
+</h3>
+
+<small>
+Clientes cadastrados
+</small>
+
+</div>
+
+
+<div class="metrica">
+
+<div class="metrica-topo">
+
+<span class="metrica-label">
+Produtos
+</span>
+
+<div class="metrica-icone">
+<i class="bi bi-basket"></i>
+</div>
+
+</div>
+
+<h3 id="relatorioProdutos">
+0
+</h3>
+
+<small>
+Produtos cadastrados
+</small>
+
+</div>
+
+</div>
+
+
+<div class="grid-dashboard">
+
+
+<div class="card-sistema">
+
+<div class="card-cabecalho">
+
+<h3>
+Vendas da semana
+</h3>
+
+</div>
+
+
+<div class="grafico">
+
+<div class="barra"
+style="height:40%;">
+
+<span>
+Seg
+</span>
+
+</div>
+
+
+<div class="barra"
+style="height:60%;">
+
+<span>
+Ter
+</span>
+
+</div>
+
+
+<div class="barra destaque"
+style="height:85%;">
+
+<span>
+Qua
+</span>
+
+</div>
+
+
+<div class="barra"
+style="height:55%;">
+
+<span>
+Qui
+</span>
+
+</div>
+
+
+<div class="barra"
+style="height:70%;">
+
+<span>
+Sex
+</span>
+
+</div>
+
+
+<div class="barra"
+style="height:100%;">
+
+<span>
+Sáb
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card-sistema">
+
+<div class="card-cabecalho">
+
+<h3>
+Resumo
+</h3>
+
+</div>
+
+
+<div class="total-linha">
+
+<span>
+Ticket médio
+</span>
+
+<strong id="ticketMedio">
+R$ 0,00
+</strong>
+
+</div>
+
+
+<hr>
+
+
+<div class="total-linha">
+
+<span>
+Produto mais vendido
+</span>
+
+<strong>
+Pão francês
+</strong>
+
+</div>
+
+
+<hr>
+
+
+<div class="total-linha">
+
+<span>
+Categoria destaque
+</span>
+
+<strong>
+Pães
+</strong>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
