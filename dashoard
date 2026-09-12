@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | InovaPan</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/estilo.css">
+</head>
+
+<body>
+
+    <!-- MENU -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                <i class="bi bi-cup-hot-fill"></i>
+            </div>
+
+            <div class="logo-text">
+                <strong>InovaPan</strong>
+                <span>Gestão de Panificadora</span>
+            </div>
+
+        </div>
+
+        <div class="menu-titulo">Menu</div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="dashboard.html" class="active">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="clientes.html">
+                    <i class="bi bi-people"></i>
+                    <span>Clientes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="produtos.html">
+                    <i class="bi bi-basket"></i>
+                    <span>Produtos</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="pedidos.html">
+                    <i class="bi bi-receipt"></i>
+                    <span>Pedidos</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="relatorios.html">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Relatórios</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="menu-sair">
+
+            <a href="#" onclick="sairSistema()">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Sair</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- CONTEÚDO -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-titulo">
+                Sistema de Gestão
+            </div>
+
+            <div class="usuario">
+
+                <div class="usuario-avatar">
+                    <i class="bi bi-person"></i>
+                </div>
+
+                <div class="usuario-info">
+                    <strong id="nomeUsuario">Usuário</strong>
+                    <span>Administrador</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="conteudo">
+
+            <!-- TÍTULO -->
+
+            <div class="titulo-pagina">
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Acompanhe o movimento da sua panificadora.</p>
+                </div>
+
+            </div>
+
+
+            <!-- BOAS VINDAS -->
+
+            <div class="boas-vindas">
+
+                <div class="boas-vindas-texto">
+
+                    <small>InovaPan</small>
+
+                    <h2>Bom dia! ☕</h2>
+
+                    <p>
+                        Tenha uma visão rápida dos pedidos,
+                        clientes, produtos e vendas.
+                    </p>
+
+                </div>
+
+                <div class="boas-vindas-icon">
+                    🥐
+                </div>
+
+            </div>
+
+
+            <!-- MÉTRICAS -->
+
+            <div class="metricas">
+
+                <div class="metrica">
+
+                    <div class="metrica-topo">
+
+                        <span class="metrica-label">
+                            Clientes
+                        </span>
+
+                        <div class="metrica-icone">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                    </div>
+
+                    <h3 id="totalClientes">0</h3>
+
+                    <small>
+                        clientes cadastrados
+                    </small>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <div class="metrica-topo">
+
+                        <span class="metrica-label">
+                            Produtos
+                        </span>
+
+                        <div class="metrica-icone">
+                            <i class="bi bi-basket"></i>
+                        </div>
+
+                    </div>
+
+                    <h3 id="totalProdutos">0</h3>
+
+                    <small>
+                        produtos cadastrados
+                    </small>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <div class="metrica-topo">
+
+                        <span class="metrica-label">
+                            Pedidos
+                        </span>
+
+                        <div class="metrica-icone">
+                            <i class="bi bi-receipt"></i>
+                        </div>
+
+                    </div>
+
+                    <h3 id="totalPedidos">0</h3>
+
+                    <small>
+                        pedidos realizados
+                    </small>
+
+                </div>
+
+
+                <div class="metrica">
+
+                    <div class="metrica-topo">
+
+                        <span class="metrica-label">
+                            Vendas
+                        </span>
+
+                        <div class="metrica-icone">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+
+                    </div>
+
+                    <h3 id="totalVendas">
+                        R$ 0,00
+                    </h3>
+
+                    <small>
+                        vendas registradas
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- GRID -->
+
+            <div class="grid-dashboard">
+
+
+                <!-- PEDIDOS -->
+
+                <div class="card-sistema">
+
+                    <div class="card-cabecalho">
+
+                        <h3>Pedidos recentes</h3>
+
+                        <a href="pedidos.html" class="link-ver">
+                            Ver todos
+                        </a>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="tabela">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Pedido</th>
+                                    <th>Cliente</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tabelaPedidos">
+
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        Nenhum pedido registrado.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- VENDAS -->
+
+                <div class="card-sistema">
+
+                    <div class="card-cabecalho">
+
+                        <h3>Vendas da semana</h3>
+
+                    </div>
+
+                    <div class="grafico">
+
+                        <div class="barra" style="height:45%;">
+                            <span>Seg</span>
+                        </div>
+
+                        <div class="barra" style="height:65%;">
+                            <span>Ter</span>
+                        </div>
+
+                        <div class="barra destaque" style="height:90%;">
+                            <span>Qua</span>
+                        </div>
+
+                        <div class="barra" style="height:55%;">
+                            <span>Qui</span>
+                        </div>
+
+                        <div class="barra" style="height:75%;">
+                            <span>Sex</span>
+                        </div>
+
+                        <div class="barra" style="height:100%;">
+                            <span>Sáb</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/app.js"></script>
+
+</body>
+</html>
