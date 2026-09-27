@@ -1,178 +1,79 @@
-const formCliente =
-    document.getElementById("formCliente");
+const formCliente = document.getElementById("formCliente");
+const listaClientes = document.getElementById("listaClientes");
+const pesquisaCliente = document.getElementById("pesquisaCliente");
+const contadorClientes = document.getElementById("contadorClientes");
 
-const listaClientes =
-    document.getElementById("listaClientes");
+async function carregarClientes() {
+    try {
+        const busca = pesquisaCliente ? pesquisaCliente.value : "";
 
-const buscarCliente =
-    document.getElementById("buscarCliente");
-
-
-function renderizarClientes(
-    filtro = ""
-) {
-
-    const clientes =
-        obterClientes();
-
-    const filtrados =
-        clientes.filter(cliente =>
-            cliente.nome
-                .toLowerCase()
-                .includes(filtro.toLowerCase())
+        const clientes = await apiFetch(
+            `/clientes?busca=${encodeURIComponent(busca)}`
         );
 
+        listaClientes.innerHTML = "";
 
-    if (filtrados.length === 0) {
+        clientes.forEach(cliente => {
+            const linha = document.createElement("tr");
 
-        listaClientes.innerHTML = `
-            <tr>
-                <td colspan="5"
-                    class="text-center">
-                    Nenhum cliente cadastrado.
-                </td>
-            </tr>
-        `;
+            linha.innerHTML = `
+                <td>${cliente.ID_CLIENTE}</td>
+                <td>${cliente.NM_CLIENTE}</td>
+                <td>${cliente.NR_TELEFONE}</td>
+                <td>${cliente.DS_EMAIL || ""}</td>
+                <td>${cliente.DS_ENDERECO || ""}</td>
+            `;
 
-        return;
-
-    }
-
-
-    listaClientes.innerHTML =
-        filtrados.map(
-            (cliente, index) => `
-
-            <tr>
-
-                <td>
-                    <strong>
-                        ${cliente.nome}
-                    </strong>
-                </td>
-
-                <td>
-                    ${cliente.telefone}
-                </td>
-
-                <td>
-                    ${cliente.email || "-"}
-                </td>
-
-                <td>
-                    ${cliente.endereco}
-                </td>
-
-                <td>
-
-                    <button
-                        class="btn btn-sm"
-                        onclick="excluirCliente(${index})">
-
-                        <i class="bi bi-trash"
-                           style="color:#b75b50;">
-                        </i>
-
-                    </button>
-
-                </td>
-
-            </tr>
-
-        `
-        ).join("");
-
-}
-
-
-formCliente?.addEventListener(
-    "submit",
-    function(event) {
-
-        event.preventDefault();
-
-
-        const clientes =
-            obterClientes();
-
-
-        clientes.push({
-
-            nome:
-                document.getElementById(
-                    "nomeCliente"
-                ).value,
-
-            telefone:
-                document.getElementById(
-                    "telefoneCliente"
-                ).value,
-
-            email:
-                document.getElementById(
-                    "emailCliente"
-                ).value,
-
-            endereco:
-                document.getElementById(
-                    "enderecoCliente"
-                ).value
-
+            listaClientes.appendChild(linha);
         });
 
+        if (contadorClientes) {
+            contadorClientes.textContent = clientes.length;
+        }
 
-        localStorage.setItem(
-            "inovapan_clientes",
-            JSON.stringify(clientes)
-        );
-
-
-        formCliente.reset();
-
-
-        const modal =
-            bootstrap.Modal.getInstance(
-                document.getElementById(
-                    "modalCliente"
-                )
-            );
-
-        modal.hide();
-
-
-        renderizarClientes();
-
+    } catch (erro) {
+        console.error(erro);
+        alert("Não foi possível carregar os clientes.");
     }
-);
-
-
-function excluirCliente(index) {
-
-    const clientes =
-        obterClientes();
-
-    clientes.splice(index, 1);
-
-    localStorage.setItem(
-        "inovapan_clientes",
-        JSON.stringify(clientes)
-    );
-
-    renderizarClientes();
-
 }
 
 
-buscarCliente?.addEventListener(
-    "input",
-    function() {
+if (formCliente) {
+    formCliente.addEventListener("submit", async (evento) => {
 
-        renderizarClientes(
-            this.value
-        );
+        evento.preventDefault();
 
-    }
-);
+        const cliente = {
+            nm_cliente: document.getElementById("nomeCliente").value,
+            nr_telefone: document.getElementById("telefoneCliente").value,
+            ds_email: document.getElementById("emailCliente").value,
+            ds_endereco: document.getElementById("enderecoCliente").value
+        };
+
+        try {
+
+            await apiFetch("/clientes", {
+                method: "POST",
+                body: JSON.stringify(cliente)
+            });
+
+            alert("Cliente cadastrado com sucesso.");
+
+            formCliente.reset();
+
+            carregarClientes();
+
+        } catch (erro) {
+            console.error(erro);
+            alert(erro.message);
+        }
+    });
+}
 
 
-renderizarClientes();
+if (pesquisaCliente) {
+    pesquisaCliente.addEventListener("input", carregarClientes);
+}
+
+
+carregarClientes();
