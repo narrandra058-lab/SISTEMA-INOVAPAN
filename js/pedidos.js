@@ -1,275 +1,162 @@
-let carrinho = [];
+const formPedido = document.getElementById("formPedido");
+const clientePedido = document.getElementById("clientePedido");
+const produtoPedido = document.getElementById("produtoPedido");
+const quantidadePedido = document.getElementById("quantidadePedido");
+const listaPedidos = document.getElementById("listaPedidos");
 
+async function carregarClientes() {
+    const clientes = await apiFetch("/clientes");
 
-function adicionarAoCarrinho(
-    nome,
-    preco
-) {
+    clientePedido.innerHTML =
+        '<option value="">Selecione o cliente</option>';
 
-    const produtoExistente =
-        carrinho.find(
-            item => item.nome === nome
-        );
+    clientes.forEach(cliente => {
+        clientePedido.innerHTML += `
+            <option value="${cliente.ID_CLIENTE}">
+                ${cliente.NM_CLIENTE}
+            </option>
+        `;
+    });
+}
 
+async function carregarProdutos() {
+    const produtos = await apiFetch("/produtos");
 
-    if (produtoExistente) {
+    produtoPedido.innerHTML =
+        '<option value="">Selecione o produto</option>';
 
-        produtoExistente.quantidade++;
+    produtos.forEach(produto => {
+        produtoPedido.innerHTML += `
+            <option value="${produto.ID_PRODUTO}">
+                ${produto.NM_PRODUTO} - R$ ${Number(produto.VL_PRECO).toFixed(2)}
+            </option>
+        `;
+    });
+}
 
-    } else {
+async function carregarPedidos() {
+    try {
+        const pedidos = await apiFetch("/pedidos");
 
-        carrinho.push({
+        listaPedidos.innerHTML = "";
 
-            nome: nome,
+        pedidos.forEach(pedido => {
+            listaPedidos.innerHTML += `
+                <tr>
+                    <td>${pedido.ID_PEDIDO}</td>
+                    <td>${pedido.NM_CLIENTE}</td>
+                    <td>${pedido.DT_PEDIDO}</td>
+                    <td>R$ ${Number(pedido.VL_TOTAL).toFixed(2)}</td>
+                    <td>
+                        <button
+                            class="btn btn-sm btn-info"
+                            onclick="verPedido(${pedido.ID_PEDIDO})">
+                            Detalhes
+                        </button>
 
-            preco: Number(preco),
-
-            quantidade: 1
-
+                        <button
+                            class="btn btn-sm btn-danger"
+                            onclick="excluirPedido(${pedido.ID_PEDIDO})">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            `;
         });
 
+    } catch (erro) {
+        console.error(erro);
+        alert("Não foi possível carregar os pedidos.");
     }
-
-
-    atualizarCarrinho();
-
 }
 
+formPedido.addEventListener("submit", async (evento) => {
 
-function removerDoCarrinho(
-    nome
-) {
+    evento.preventDefault();
 
-    const produto =
-        carrinho.find(
-            item => item.nome === nome
-        );
+    const pedido = {
+        id_cliente: Number(clientePedido.value),
+        itens: [
+            {
+                id_produto: Number(produtoPedido.value),
+                qt_produto: Number(quantidadePedido.value)
+            }
+        ]
+    };
 
+    try {
 
-    if (!produto) return;
+        await apiFetch("/pedidos", {
+            method: "POST",
+            body: JSON.stringify(pedido)
+        });
 
+        alert("Pedido cadastrado com sucesso.");
 
-    produto.quantidade--;
+        formPedido.reset();
 
+        carregarPedidos();
 
-    if (produto.quantidade <= 0) {
-
-        carrinho =
-            carrinho.filter(
-                item =>
-                    item.nome !== nome
-            );
-
+    } catch (erro) {
+        console.error(erro);
+        alert(erro.message);
     }
+});
 
+async function verPedido(id) {
 
-    atualizarCarrinho();
+    try {
 
+        const resultado = await apiFetch(`/pedidos/${id}`);
+
+        let mensagem =
+            `Pedido: ${resultado.pedido.ID_PEDIDO}\n` +
+            `Cliente: ${resultado.pedido.NM_CLIENTE}\n` +
+            `Total: R$ ${Number(resultado.pedido.VL_TOTAL).toFixed(2)}\n\n` +
+            `Itens:\n`;
+
+        resultado.itens.forEach(item => {
+            mensagem +=
+                `${item.NM_PRODUTO} - ` +
+                `${item.QT_PRODUTO} unidade(s)\n`;
+        });
+
+        alert(mensagem);
+
+    } catch (erro) {
+        alert(erro.message);
+    }
 }
 
+async function excluirPedido(id) {
 
-function atualizarCarrinho() {
-
-    const container =
-        document.getElementById(
-            "itensCarrinho"
-        );
-
-
-    const subtotalElemento =
-        document.getElementById(
-            "subtotalPedido"
-        );
-
-
-    const totalElemento =
-        document.getElementById(
-            "totalPedido"
-        );
-
-
-    if (!container) return;
-
-
-    if (carrinho.length === 0) {
-
-        container.innerHTML = `
-
-            <div class="carrinho-vazio">
-
-                <i class="bi bi-basket"
-                   style="font-size:30px;">
-                </i>
-
-                <br><br>
-
-                Nenhum produto adicionado.
-
-            </div>
-
-        `;
-
-    } else {
-
-        container.innerHTML =
-            carrinho.map(
-                item => `
-
-                <div class="d-flex
-                            justify-content-between
-                            align-items-center
-                            mb-3">
-
-                    <div>
-
-                        <strong
-                            style="font-size:11px;">
-
-                            ${item.nome}
-
-                        </strong>
-
-                        <br>
-
-                        <small>
-
-                            ${item.quantidade}
-                            x
-                            ${formatarMoeda(item.preco)}
-
-                        </small>
-
-                    </div>
-
-
-                    <div>
-
-                        <button
-                            class="btn btn-sm"
-                            onclick="removerDoCarrinho('${item.nome}')">
-
-                            −
-
-                        </button>
-
-
-                        <button
-                            class="btn btn-sm"
-                            onclick="adicionarAoCarrinho('${item.nome}', ${item.preco})">
-
-                            +
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `
-            ).join("");
-
-    }
-
-
-    const total =
-        carrinho.reduce(
-            (soma, item) =>
-                soma +
-                item.preco *
-                item.quantidade,
-            0
-        );
-
-
-    subtotalElemento.textContent =
-        formatarMoeda(total);
-
-
-    totalElemento.textContent =
-        formatarMoeda(total);
-
-}
-
-
-function finalizarPedido() {
-
-    if (carrinho.length === 0) {
-
-        alert(
-            "Adicione pelo menos um produto ao pedido."
-        );
-
+    if (!confirm("Deseja excluir este pedido?")) {
         return;
-
     }
 
+    try {
 
-    const cliente =
-        document.getElementById(
-            "clientePedido"
-        )?.value;
+        await apiFetch(`/pedidos/${id}`, {
+            method: "DELETE"
+        });
 
+        alert("Pedido excluído com sucesso.");
 
-    if (!cliente) {
+        carregarPedidos();
 
-        alert(
-            "Selecione um cliente."
-        );
-
-        return;
-
+    } catch (erro) {
+        alert(erro.message);
     }
-
-
-    const pedidos =
-        obterPedidos();
-
-
-    const total =
-        carrinho.reduce(
-            (soma, item) =>
-                soma +
-                item.preco *
-                item.quantidade,
-            0
-        );
-
-
-    pedidos.push({
-
-        id:
-            Date.now(),
-
-        cliente:
-            cliente,
-
-        itens:
-            carrinho,
-
-        total:
-            total,
-
-        data:
-            new Date().toLocaleDateString(
-                "pt-BR"
-            )
-
-    });
-
-
-    localStorage.setItem(
-        "inovapan_pedidos",
-        JSON.stringify(pedidos)
-    );
-
-
-    alert(
-        "Pedido registrado com sucesso!"
-    );
-
-
-    carrinho = [];
-
-    atualizarCarrinho();
-
 }
+
+async function iniciar() {
+    try {
+        await carregarClientes();
+        await carregarProdutos();
+        await carregarPedidos();
+    } catch (erro) {
+        console.error(erro);
+    }
+}
+
+iniciar();
