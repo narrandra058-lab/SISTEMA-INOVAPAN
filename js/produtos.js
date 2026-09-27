@@ -1,77 +1,61 @@
-const formProduto =
-    document.getElementById("formProduto");
+const formProduto = document.getElementById("formProduto");
+const listaProdutos = document.getElementById("listaProdutos");
 
+async function carregarProdutos() {
+    try {
+        const produtos = await apiFetch("/produtos");
 
-const buscaProduto =
-    document.getElementById("buscarProduto");
+        listaProdutos.innerHTML = "";
 
+        produtos.forEach(produto => {
+            const linha = document.createElement("tr");
 
-const filtroCategoria =
-    document.getElementById("filtroCategoria");
+            linha.innerHTML = `
+                <td>${produto.ID_PRODUTO}</td>
+                <td>${produto.NM_PRODUTO}</td>
+                <td>${produto.DS_DESCRICAO || ""}</td>
+                <td>R$ ${Number(produto.VL_PRECO).toFixed(2)}</td>
+            `;
 
+            listaProdutos.appendChild(linha);
+        });
 
-function salvarProduto() {
-
-    const produtos =
-        obterProdutos();
-
-
-    produtos.push({
-
-        id: Date.now(),
-
-        nome:
-            document.getElementById(
-                "nomeProduto"
-            ).value,
-
-        descricao:
-            document.getElementById(
-                "descricaoProduto"
-            ).value,
-
-        preco:
-            Number(
-                document.getElementById(
-                    "precoProduto"
-                ).value
-            ),
-
-        categoria:
-            document.getElementById(
-                "categoriaProduto"
-            ).value
-
-    });
-
-
-    localStorage.setItem(
-        "inovapan_produtos",
-        JSON.stringify(produtos)
-    );
-
+    } catch (erro) {
+        console.error(erro);
+        alert("Não foi possível carregar os produtos.");
+    }
 }
 
+if (formProduto) {
+    formProduto.addEventListener("submit", async (evento) => {
 
-formProduto?.addEventListener(
-    "submit",
-    function(event) {
+        evento.preventDefault();
 
-        event.preventDefault();
+        const produto = {
+            nm_produto: document.getElementById("nomeProduto").value,
+            ds_descricao: document.getElementById("descricaoProduto").value,
+            vl_preco: Number(
+                document.getElementById("precoProduto").value
+            )
+        };
 
-        salvarProduto();
+        try {
+            await apiFetch("/produtos", {
+                method: "POST",
+                body: JSON.stringify(produto)
+            });
 
-        formProduto.reset();
+            alert("Produto cadastrado com sucesso.");
 
+            formProduto.reset();
 
-        const modal =
-            bootstrap.Modal.getInstance(
-                document.getElementById(
-                    "modalProduto"
-                )
-            );
+            carregarProdutos();
 
-        modal.hide();
+        } catch (erro) {
+            console.error(erro);
+            alert(erro.message);
+        }
+    });
+}
 
-    }
-);
+carregarProdutos();
